@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.dao.CartMapper">
+	<resultMap type="Cart" id="listCart">
+		<id property="cartId" column="cartId"/>
+		<association property="book" javaType="BookInfo">
+			<id property="id" column="id"/>
+		</association>
+		<association property="user" javaType="User">
+			<id property="userId" column="userId"/>
+		</association>
+	</resultMap>
+	<!-- 根据书籍id和用户id查找是否用户购物车存在此商品 -->
+	<select id="findCartByBidAndUid" resultMap="listCart">
+		select * from system_book_cart where bookId=#{bid} and uid=#{uid}
+	</select>
+	<!-- 插入一条新记录 -->
+	<insert id="addCart" parameterType="Cart">
+		insert into system_book_cart(bookId,uid,count) 
+			values(#{book.id},#{user.userId},#{count})
+	</insert>
+	<!-- 根据书籍id和用户Id修改购物车中对应商品数量 -->
+	<update id="alterCart">
+		update system_book_cart set count=count+1 where bookId=#{bid} and uid=#{uid}
+	</update>
+	<!-- 根据用户id查询其购物车中所有商品 -->
+	<select id="findCartsByUid" parameterType="string" resultMap="listCart">
+		select * from system_book_cart 
+			inner join system_book_user on system_book_cart.uid=system_book_user.userId
+			inner join system_book_info on system_book_cart.bookId=system_book_info.id
+			where uid=#{uid}
+	</select>
+	<!-- 根据商品id移除出购物车 -->
+	<delete id="deleteCartById" parameterType="int">
+		delete from system_book_cart where cartId=#{id}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

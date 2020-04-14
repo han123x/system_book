@@ -14,43 +14,35 @@ import com.book.pojo.Category;
 import com.book.service.BookService;
 import com.mysql.jdbc.StringUtils;
 
-@WebServlet("/book_mgr")
-public class BookMgrAccess extends HttpServlet {
+@WebServlet("/book_edit")
+public class BookEditAccess extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private BookService bookService = new BookService();
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("utf-8");
-		// 获取当前页码
-		String sCurrentPage = request.getParameter("currentPage");
-		if(StringUtils.isNullOrEmpty(sCurrentPage)) {
-			sCurrentPage = "1";
+		// 接收图书参数
+		String sId = request.getParameter("id");
+		if(StringUtils.isNullOrEmpty(sId)) {
+			request.getRequestDispatcher("/WEB-INF/jsp/book_mgr.jsp").forward(request, response);
+			return;
 		}
-		Integer currentPage = Integer.valueOf(sCurrentPage);
-		// 获取所有分类信息
+		Integer id = Integer.valueOf(sId);
+		// 根据图书id获取图书信息
+		BookInfo book = bookService.findBookById(id);
+		if(book == null) {
+			request.getRequestDispatcher("/WEB-INF/jsp/book_mgr.jsp").forward(request, response);
+			return;
+		}
+		// 获取图书分类信息
 		List<Category> categories = bookService.listCategories();
-		// 获取所有书籍信息
-		List<BookInfo> books = bookService.listBook(currentPage,null,null);
-		// 获取书籍数量
-		Integer count = bookService.bookCount(null,null);
-		// 调用服务，生成分页导航字符串
-		String navStr = bookService.bookNavStr(currentPage, count,"book_mgr");
-		// 把信息放入request
+		// 把book对象放入request中
+		request.setAttribute("book", book);
 		request.setAttribute("categories", categories);
-		request.setAttribute("books", books);
-		request.setAttribute("navStr", navStr);
-		
-		request.getRequestDispatcher("/WEB-INF/jsp/book_mgr.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/jsp/book_edit.jsp").forward(request, response);
+		return;
 	}
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
 }
-
-
-
-
-
-
-
-

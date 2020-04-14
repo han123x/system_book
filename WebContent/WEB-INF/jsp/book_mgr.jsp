@@ -15,7 +15,8 @@
     	<!-- /header -->
     	<div id="main">
 			<div class="section-left">    	
-				<h2>图书信息列表</h2>		
+				<h2>图书信息列表</h2>	
+				<p style="color: red;">${infor }</p>	
 				<table class="table" cellspacing="0" style="font-size: 12px;">
 			    	<tr>
 			    		<td class="header" width="100">书名</td>
@@ -24,35 +25,20 @@
 			    		<td class="header" width="60">售价</td>
 			    		<td class="header" width="60">操作</td>
 			    	</tr>
+			    	<!-- 获取book的categorys属性，再获取category的category -->
+			    	<c:forEach items="${books }" var="book">
 			    	<tr>
-			    		<td>三国演义</td>
-			    		<td>罗贯中</td>
-			    		<td>小说</td>
-			    		<td>￥52.5</td>
-			    		<td><a href="#">删除</a>&nbsp;<a href="book-edit.html">编辑</a></td>
+			    		<td>${book.bookName }</td>
+			    		<td>${book.author }</td>
+			    		<td>${book.category.category }</td>	
+			    		<td>${book.price }</td>
+			    		<td><a href="delete_book?id=${book.id }">删除</a>&nbsp;<a href="book_edit?id=${book.id }">编辑</a></td>
 			    	</tr>
-			    	<tr>
-			    		<td>西游记</td>
-			    		<td>吴承恩</td>
-			    		<td>小说</td>
-			    		<td>￥36.0</td>
-			    		<td><a href="#">删除</a>&nbsp;<a href="book-edit.html">编辑</a></td>
-			    	</tr>
-			    	<tr>
-			    		<td>史记</td>
-			    		<td>司马迁</td>
-			    		<td>历史</td>
-			    		<td>￥78.0</td>
-			    		<td><a href="#">删除</a>&nbsp;<a href="book-edit.html">编辑</a></td>
-			    	</tr>
-			    	<tr>
-			    		<td>红楼梦</td>
-			    		<td>曹雪芹</td>
-			    		<td>小说</td>
-			    		<td>￥92.5</td>
-			    		<td><a href="#">删除</a>&nbsp;<a href="book-edit.html">编辑</a></td>
-			    	</tr>
+			    	</c:forEach>
 			    </table>
+			    <div class="paging">
+    				${navStr }   					
+    			</div>
 			</div>
 			<div class="section-right">
 				<h2>添加图书信息</h2>

@@ -10,49 +10,35 @@
     <div id="container">
     	<!-- header -->
     	<%@ include file="user_include/header.jsp" %>
-    	<!-- /header -->  
-    	<form id="search-bar" action="" method="post">
-	    		书名：<input type="text" class="txt" name="condition" />
-	    		<input id="search-btn" type="submit" value=" 搜索图书 " />
-    	</form>   	
+    	<!-- /header -->  	
     	<div id="main">
-    		<div class="section-left">
-    			<div class="box-left">
-    				<div class="box-title">分类畅销榜</div>
-    				<div class="box-content">
-    					<p>·<a href="#">文学</a></p>
-    					<p>·<a href="#">小说</a></p>
-    					<p>·<a href="#">青春文学</a></p>
-    					<p>·<a href="#">旅游</a></p>
-    					<p>·<a href="#">哲学</a></p>
-    					<p>·<a href="#">百科</a></p>
-    					<p>·<a href="#">恐怖小说</a></p>    		
-    				</div>
-    			</div>
-    		</div>
+    		<!-- left -->
+    		<%@ include file="user_include/left.jsp" %>
+    		<!-- /left -->
     		<div class="section-right">
     			<h3 align="center" style="margin-bottom: 20px; ">您选购的商品如下：</h3>
+    			<h3 align="center" style="margin-bottom: 14px; color: red;">${message }</h3>
     			<table  align="center"  cellpadding="0" cellspacing="0">
     				<tr>
     					<td class="header" width="200">书名</td>
     					<td class="header"  width="60">单价</td>
     					<td class="header"  width="60">购物数量</td>
     					<td class="header"  width="60">小计</td>
+    					<td class="header" width="60">操作</td>
     				</tr>
+    				<c:set var="sum" value="0"/>
+    				<c:forEach items="${carts }" var="cart">
+    					<c:set var="sum" value="${sum=sum+cart.count*cart.book.price }"/>
+    					<tr>
+    					<td>《${cart.book.bookName }》</td>
+    					<td>￥${cart.book.price }</td>
+    					<td>${cart.count } 本</td>
+    					<td>￥${cart.count*cart.book.price }</td>
+    					<td><a href="delete_cart?cartId=${cart.cartId }">移除</a></td>
+    					</tr>
+    				</c:forEach>
     				<tr>
-    					<td>《红楼小讲》</td>
-    					<td>￥15.0</td>
-    					<td>7 本</td>
-    					<td>￥105.0</td>
-    				</tr>
-    				<tr>
-    					<td>《尸鬼》</td>
-    					<td>￥170.0</td>
-    					<td>1 本</td>
-    					<td>￥170.0</td>
-    				</tr>
-    				<tr>
-    					<td colspan="4" class="header" style="text-align: right;">总计：￥275.0</td>
+    					<td colspan="5" class="header" style="text-align: right;">总计：￥${sum }</td>
     				</tr>
     			</table>	
     			<div style="text-align: center; font-size: 14px; line-height: 40px;">
